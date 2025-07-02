@@ -3,11 +3,17 @@ package com.ktvincco.rainbowraycamera
 
 import android.content.Context
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
-import android.view.KeyEvent
+import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 import androidx.activity.ComponentActivity
+import androidx.activity.addCallback
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.core.view.WindowCompat.setDecorFitsSystemWindows
 import com.ktvincco.rainbowraycamera.domain.Main
 import com.ktvincco.rainbowraycamera.presentation.ModelData
 import com.ktvincco.rainbowraycamera.presentation.UiEventHandler
@@ -63,6 +69,34 @@ class MainActivity : ComponentActivity() {
         val wakeLockFlags = PowerManager.SCREEN_DIM_WAKE_LOCK
         wakeLock = powerManager!!.newWakeLock(wakeLockFlags, "App:WakeLockTag")
         wakeLock?.acquire(128*60*1000L /*10 minutes*/)
+
+        // Enable edge-to-edge UI layout
+        enableEdgeToEdge()
+        setDecorFitsSystemWindows(window, false)
+
+        // Immersive mode
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Android 11+
+            window.insetsController?.let { controller ->
+                // Hide status bar and navigation
+                controller.hide(WindowInsets.Type.systemBars())
+                // Set return by swipe behaviour
+                controller.systemBarsBehavior =
+                    WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        } else {
+            // Immersive mode for old android
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
+                        View.SYSTEM_UI_FLAG_FULLSCREEN or
+                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        }
+
+        // Process system "back" event
+        onBackPressedDispatcher.addCallback(this /* lifecycle owner */) {
+            main?.onNewSystemEvent("onGoBackEvent")
+        }
     }
 
 
@@ -114,14 +148,4 @@ class MainActivity : ComponentActivity() {
             else -> super.onKeyDown(keyCode, event)
         }
     }*/
-
-
-    // Handle system "back" event
-    @Deprecated("This method is deprecated because it is overridden " +
-            "for handling onBackPressed()", level = DeprecationLevel.HIDDEN)
-    override fun onBackPressed() {
-        // super.onBackPressed() <- close App
-        // Provide system event
-        main?.onNewSystemEvent("onGoBackEvent")
-    }
 }

@@ -17,6 +17,7 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.PendingPurchasesParams
 import com.android.billingclient.api.ProductDetailsResult
 import com.android.billingclient.api.Purchase.PurchaseState
 import com.android.billingclient.api.PurchasesResponseListener
@@ -389,7 +390,9 @@ class MonetizationService (
 
         // Create billing client
         billingClient = BillingClient.newBuilder(mainActivity)
-            .setListener(purchasesUpdatedListener).enablePendingPurchases().build()
+            .setListener(purchasesUpdatedListener).enablePendingPurchases(
+                PendingPurchasesParams.newBuilder().enableOneTimeProducts()
+                    .enablePrepaidPlans().build()).build()
 
         // Take connection to Google Play Services
         billingClient.startConnection(object : BillingClientStateListener {

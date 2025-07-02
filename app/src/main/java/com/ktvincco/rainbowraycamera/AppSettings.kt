@@ -9,11 +9,11 @@ class AppSettings {
 
     // Build configuration and important settings
     private val endOfBuildLifetime: Long = 1900569600 // Unix // 24 Mar of 2030 1:00:00 AM
-    private val startupScreenVersion: Int = 5 // Value > 0 // !!! MAY CHANGE BEFORE RELEASE !!!
+    private val startupScreenVersion: Int = 6 // Value > 0 // !!! MAY CHANGE BEFORE RELEASE !!!
     private val termsOfUseLink: String =
-        "https://sites.google.com/view/rainbowraycamera-termsofuse/home"
+        "https://ktvincco.com/rainbowraycamera/termsofuse/"
     private val privacyPolicyLink: String =
-        "https://sites.google.com/view/rainbowraycamera-privacypolicy/home"
+        "https://ktvincco.com/rainbowraycamera/privacypolicy/"
     private val linkToTheApplicationInGooglePlayMarket: String =
         "https://play.google.com/store/apps/details?id=com.ktvincco.rainbowraycamera"
 
